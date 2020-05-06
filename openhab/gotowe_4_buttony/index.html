@@ -1,0 +1,510 @@
+<!DOCTYPE HTML>
+<html lang="pl">
+    <head>
+		<meta charset="utf-8" />
+        <title>Inteligentna instalacja</title>
+			<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <script>
+		strLED1 = "";
+		strLED2 = "";
+		strLED3 = "";
+		strLED4 = "";
+		var LED1_state = 0;
+		var LED2_state = 0;
+		var LED3_state = 0;
+		var LED4_state = 0;
+		function GetArduinoIO()
+		{
+			nocache = "&nocache=" + Math.random() * 1000000;
+			var request = new XMLHttpRequest();
+			request.onreadystatechange = function()
+			{
+				if (this.readyState == 4) {
+					if (this.status == 200) {
+						if (this.responseXML != null) {
+							// XML file received - contains analog values, switch values and LED states
+							var count;
+							// get analog inputs
+							var num_an = this.responseXML.getElementsByTagName('analog').length;
+							for (count = 0; count < num_an; count++) {
+								document.getElementsByClassName("analog")[count].innerHTML =
+									this.responseXML.getElementsByTagName('analog')[count].childNodes[0].nodeValue;
+							}
+							// get switch inputs
+							var num_an = this.responseXML.getElementsByTagName('switch').length;
+							for (count = 0; count < num_an; count++) {
+								document.getElementsByClassName("switches")[count].innerHTML =
+									this.responseXML.getElementsByTagName('switch')[count].childNodes[0].nodeValue;
+							}
+							// LED 3
+							if (this.responseXML.getElementsByTagName('LED')[0].childNodes[0].nodeValue === "on") {
+								document.getElementById("LED1").innerHTML = "ON (D6)";
+								LED3_state = 1;
+							}
+							else {
+								document.getElementById("LED1").innerHTML = "OFF (D6)";
+								LED3_state = 0;
+							}
+							if (this.responseXML.getElementsByTagName('LED')[1].childNodes[0].nodeValue === "on") {
+								document.getElementById("LED2").innerHTML = "ON (D7)";
+								LED3_state = 1;
+							}
+							else {
+								document.getElementById("LED2").innerHTML = "OFF (D7)";
+								LED3_state = 0;
+							}
+							if (this.responseXML.getElementsByTagName('LED')[2].childNodes[0].nodeValue === "on") {
+								document.getElementById("LED3").innerHTML = "ON (D8)";
+								LED3_state = 1;
+							}
+							else {
+								document.getElementById("LED3").innerHTML = "OFF (D8)";
+								LED3_state = 0;
+							}
+							// LED 4
+							if (this.responseXML.getElementsByTagName('LED')[3].childNodes[0].nodeValue === "on") {
+								document.getElementById("LED4").innerHTML = "ON (D9)";
+								LED4_state = 1;
+							}
+							else {
+								document.getElementById("LED4").innerHTML = "OFF (D9)";
+								LED4_state = 0;
+							}
+						}
+					}
+				}
+			}
+			// send HTTP GET request with LEDs to switch on/off if any
+			request.open("GET", "ajax_inputs" + strLED1 + strLED2 + strLED3 + strLED4 + nocache, true);
+			request.send(null);
+			setTimeout('GetArduinoIO()', 1000);
+			strLED1 = "";
+			strLED2 = "";
+			strLED3 = "";
+			strLED4 = "";
+		}
+		function GetButton1()
+		{
+			if (LED1_state === 1) {
+				LED1_state = 0;
+				strLED1 = "&LED1=0";
+			}
+			else {
+				LED1_state = 1;
+				strLED1 = "&LED1=1";
+			}
+		}
+		function GetButton2()
+		{
+			if (LED2_state === 1) {
+				LED2_state = 0;
+				strLED2 = "&LED2=0";
+			}
+			else {
+				LED2_state = 1;
+				strLED2 = "&LED2=1";
+			}
+		}
+		function GetButton3()
+		{
+			if (LED3_state === 1) {
+				LED3_state = 0;
+				strLED3 = "&LED3=0";
+			}
+			else {
+				LED3_state = 1;
+				strLED3 = "&LED3=1";
+			}
+		}
+		function GetButton4()
+		{
+			if (LED4_state === 1) {
+				LED4_state = 0;
+				strLED4 = "&LED4=0";
+			}
+			else {
+				LED4_state = 1;
+				strLED4 = "&LED4=1";
+			}
+		}
+	</script>
+	<style>
+	
+		.container {
+			max-width: 1000px;
+			margin-left: auto;
+			margin-right: auto;
+		}
+		#pomieszczenie{
+			overflow: auto;
+			width: 1000px;
+			border: 2px solid #666666;
+		}
+		.IO_box {
+			background-color: #303030;
+			float: left;
+			margin: 10px 50px 20px 0px;
+			padding: 0px 10px 10px 10px;
+			width:200px;	
+			position:relative;
+			left:200px;
+			border: 2px dotted #666666;
+		}
+		button{
+			display: block;
+			display: inline-block;
+			font-size: 100%;
+			color: #128870;
+			padding: 20px;
+			margin-left: 20px;
+			margin-right: 20px;
+		}
+		.small_text {
+			font-size: 90%;
+			color: lightgray;
+		}
+		#topbar{
+			background-color: #303030;
+			margin-top: 20px;
+			color: #ffffff;
+			padding: 10px;
+			margin-bottom: 25px;
+		}
+		#sidebar{
+			float: left;
+			padding:20px;
+			background-color: #303030;
+			text-align: center;
+			font-size: 18px;
+			position: fixed;
+			border: 2px solid #666666;
+		}
+		.option{
+			float: left;
+			min-width: 50px;
+			height: 25px;
+			font-size: 18px;
+			padding: 10px;
+			border-right: 2px dotted #444444;
+			opacity: 0.8;
+		}
+		.option:hover{
+			background-color: #000000;
+			cursor: pointer;
+		}
+		.optionL:hover{
+			background-color: #f36742;
+			color: white;
+			cursor: pointer;
+		}
+		.optionL{
+			font-size:18px;
+			height:25px;
+			padding: 10px;
+			border-bottom: 2px dotted #444444;
+		}
+		#footer{
+			clear: both;
+			color: white;
+			text-align: center;
+			padding: 20px;
+			font-size: 18px;
+		}
+		h1 {
+		    text-align: center;
+			font-size: 170%;
+			color: #128870;
+			margin: 0 0 10px 0;
+		}
+		h2 {
+			font-size: 130%;
+			color: #f36742;
+			margin: 5px 0 5px 0;
+			text-align: center;
+		}
+		p, form{
+			font-size: 100%;
+			color: #128870;
+			text-align: center;		
+	</style>
+    </head>
+    <body onload="GetArduinoIO()"  bgcolor="#404040" link="lightgray" vlink="lightgray" alink="lightgray">
+	<div class="container">
+        <a name="start"><h1>Sterowanie</h1></a>
+		<div id="topbar">
+			<a href="#pracownia"><div class="option">Pracownia</div></a>
+			<a href="#garaz"><div class="option">Garaż</div></a>
+			<a href="#salon"><div class="option">Salon</div></a>
+			<a href="#lazienka"><div class="option">Łazienka</div></a>
+			<a href="#kuchnia"><div class="option">Kuchnia</div></a>
+			<a href="#korytarz"><div class="option">Korytarz</div></a>
+			<a href="#ogrod"><div class="option">Ogród</div></a>
+			<div style="clear:both;"></div>
+		</div>
+		<div id="sidebar">
+			<a href="#start"><div class="optionL">Start</div></a>
+			<a href="#pracownia"><div class="optionL">Pracownia</div></a>
+			<a href="#garaz"><div class="optionL">Garaż</div></a>
+			<a href="#salon"><div class="optionL">Salon</div></a>
+			<a href="#lazienka"><div class="optionL">Łazienka</div></a>
+			<a href="#kuchnia"><div class="optionL">Kuchnia</div></a>
+			<a href="#korytarz"><div class="optionL">Korytarz</div></a>
+			<a href="#ogrod"><div class="optionL">Ogród</div></a>
+		</div>
+		<div id="pomieszczenie">
+			<a name="pracownia"><h1>Pracownia</h1></a>
+			<div class="IO_box">
+				<h2>Czujniki Pracownia.</h2></a>
+				<p class="small_text">A0 used by Ethernet shield</p>
+				<p class="small_text">A1 used by Ethernet shield</p>
+				<p>Czujnik xxx (podłączony do A2): <span class="analog">...</span></p>
+				<p>Czujnik xxx (podłączony do A3): <span class="analog">...</span></p>
+				<p>Czujnik xxx (podłączony do A4): <span class="analog">...</span></p>
+			</div>
+			<div class="IO_box">
+				<h2>Czujniki stykowe</h2>
+				<p class="small_text">D0: used by serial RX</p>
+				<p class="small_text">D1: used by serial TX</p>
+				<p>Switch 1 (D2): <span class="switches">...</span></p>
+				<p>Switch 2 (D3): <span class="switches">...</span></p>
+				<p class="small_text">D4: used by Ethernet shield</p>
+				<p>Switch 3 (D5): <span class="switches">...</span></p>
+			</div>
+			<div class="IO_box">
+				<h2>Oświetlenie</h2>
+				<p>Punkty są: <button type="button" id="LED1" onclick="GetButton1()">OFF (D6)</button><br /><br /></p>
+				<p>Żylandor jest: <button type="button" id="LED2" onclick="GetButton2()">OFF (D7)</button><br /><br /></p>
+			</div>
+			<div class="IO_box">
+				<h2>Rolety</h2>
+				<p>Duże okno: <button type="button" id="LED3" onclick="GetButton3()">OFF (D8)</button><br /><br /></p>
+				<p>Małe okno: <button type="button" id="LED4" onclick="GetButton4()">OFF (D9)</button><br /><br /></p>
+			</div>
+			<div class="IO_box">
+				<h2>Ogrzewanie</h2>
+				<p>Czujnik temperatury (podłączony do A5): <span class="analog">...</span>°C</p>
+				<button type="button" id="LED1" onclick="GetButton1()">+</button>
+				<button type="button" id="LED2" onclick="GetButton2()">-</button>
+				<p>Ogrzewanie jest (D2): <span class="switches">...</span></p>
+			</div>
+		</div>
+		<div id="pomieszczenie">
+			<a name="garaz"><h1>Garaż</h1></a>
+			<div class="IO_box">
+				<h2>Czujniki Garaż.</h2></a>
+				<p class="small_text">A0 used by Ethernet shield</p>
+				<p class="small_text">A1 used by Ethernet shield</p>
+				<p>Czujnik xxx (podłączony do A2): <span class="analog">...</span></p>
+				<p>Czujnik xxx (podłączony do A3): <span class="analog">...</span></p>
+				<p>Czujnik xxx (podłączony do A4): <span class="analog">...</span></p>
+				<p>Czujnik xxx (podłączony do A5): <span class="analog">...</span></p>
+			</div>
+			<div class="IO_box">
+				<h2>Czujniki stykowe</h2>
+				<p class="small_text">D0: used by serial RX</p>
+				<p class="small_text">D1: used by serial TX</p>
+				<p>Switch 1 (D2): <span class="switches">...</span></p>
+				<p>Switch 2 (D3): <span class="switches">...</span></p>
+				<p class="small_text">D4: used by Ethernet shield</p>
+				<p>Switch 3 (D5): <span class="switches">...</span></p>
+			</div>
+			<div class="IO_box">
+				<h2>Oświetlenie</h2>
+				<p>Punkty są: <button type="button" id="LED1" onclick="GetButton1()">OFF (D6)</button><br /><br /></p>
+				<p>Żylandor jest: <button type="button" id="LED2" onclick="GetButton2()">OFF (D7)</button><br /><br /></p>
+			</div>
+			<div class="IO_box">
+				<h2>Rolety</h2>
+				<p>Duże okno: <button type="button" id="LED3" onclick="GetButton3()">OFF (D8)</button><br /><br /></p>
+				<p>Małe okno: <button type="button" id="LED4" onclick="GetButton4()">OFF (D9)</button><br /><br /></p>
+			</div>
+			<div class="IO_box">
+				<h2>Ogrzewanie</h2>
+				<p>Czujnik temperatury (podłączony do A5): <span class="analog">...</span></p>
+				<button type="button" id="LED1" onclick="GetButton1()">+</button>
+				<button type="button" id="LED2" onclick="GetButton2()">-</button>
+				<p>Ogrzewanie jest (D2): <span class="switches">...</span></p>
+			</div>
+		</div>
+		<div id="pomieszczenie">
+			<a name="salon"><h1>Salon</h1></a>
+			<div class="IO_box">
+				<h2>Czujniki Salon.</h2></a>
+				<p class="small_text">A0 used by Ethernet shield</p>
+				<p class="small_text">A1 used by Ethernet shield</p>
+				<p>Czujnik xxx (podłączony do A2): <span class="analog">...</span></p>
+				<p>Czujnik xxx (podłączony do A3): <span class="analog">...</span></p>
+				<p>Czujnik xxx (podłączony do A4): <span class="analog">...</span></p>
+				<p>Czujnik xxx (podłączony do A5): <span class="analog">...</span></p>
+			</div>
+			<div class="IO_box">
+				<h2>Czujniki stykowe</h2>
+				<p class="small_text">D0: used by serial RX</p>
+				<p class="small_text">D1: used by serial TX</p>
+				<p>Switch 1 (D2): <span class="switches">...</span></p>
+				<p>Switch 2 (D3): <span class="switches">...</span></p>
+				<p class="small_text">D4: used by Ethernet shield</p>
+				<p>Switch 3 (D5): <span class="switches">...</span></p>
+			</div>
+			<div class="IO_box">
+				<h2>Oświetlenie</h2>
+				<p>Punkty są: <button type="button" id="LED1" onclick="GetButton1()">OFF (D6)</button><br /><br /></p>
+				<p>Żylandor jest: <button type="button" id="LED2" onclick="GetButton2()">OFF (D7)</button><br /><br /></p>
+			</div>
+			<div class="IO_box">
+				<h2>Rolety</h2>
+				<p>Duże okno: <button type="button" id="LED3" onclick="GetButton3()">OFF (D8)</button><br /><br /></p>
+				<p>Małe okno: <button type="button" id="LED4" onclick="GetButton4()">OFF (D9)</button><br /><br /></p>
+			</div>
+			<div class="IO_box">
+				<h2>Ogrzewanie</h2>
+				<p>Czujnik temperatury (podłączony do A5): <span class="analog">...</span></p>
+				<button type="button" id="LED1" onclick="GetButton1()">+</button>
+				<button type="button" id="LED2" onclick="GetButton2()">-</button>
+				<p>Ogrzewanie jest (D2): <span class="switches">...</span></p>
+			</div>
+		</div>
+		<div id="pomieszczenie">
+			<a name="lazienka"><h1>Łazienka</h1></a>
+			<div class="IO_box">
+				<h2>Czujniki Łazienka.</h2></a>
+				<p class="small_text">A0 used by Ethernet shield</p>
+				<p class="small_text">A1 used by Ethernet shield</p>
+				<p>Czujnik xxx (podłączony do A2): <span class="analog">...</span></p>
+				<p>Czujnik xxx (podłączony do A3): <span class="analog">...</span></p>
+				<p>Czujnik xxx (podłączony do A4): <span class="analog">...</span></p>
+				<p>Czujnik xxx (podłączony do A5): <span class="analog">...</span></p>
+			</div>
+			<div class="IO_box">
+				<h2>Czujniki stykowe</h2>
+				<p class="small_text">D0: used by serial RX</p>
+				<p class="small_text">D1: used by serial TX</p>
+				<p>Switch 1 (D2): <span class="switches">...</span></p>
+				<p>Switch 2 (D3): <span class="switches">...</span></p>
+				<p class="small_text">D4: used by Ethernet shield</p>
+				<p>Switch 3 (D5): <span class="switches">...</span></p>
+			</div>
+			<div class="IO_box">
+				<h2>Oświetlenie</h2>
+				<p>Punkty są: <button type="button" id="LED1" onclick="GetButton1()">OFF (D6)</button><br /><br /></p>
+				<p>Żylandor jest: <button type="button" id="LED2" onclick="GetButton2()">OFF (D7)</button><br /><br /></p>
+			</div>
+			<div class="IO_box">
+				<h2>Rolety</h2>
+				<p>Duże okno: <button type="button" id="LED3" onclick="GetButton3()">OFF (D8)</button><br /><br /></p>
+				<p>Małe okno: <button type="button" id="LED4" onclick="GetButton4()">OFF (D9)</button><br /><br /></p>
+			</div>
+			<div class="IO_box">
+				<h2>Ogrzewanie</h2>
+				<p>Czujnik temperatury (podłączony do A5): <span class="analog">...</span></p>
+				<button type="button" id="LED1" onclick="GetButton1()">+</button>
+				<button type="button" id="LED2" onclick="GetButton2()">-</button>
+				<p>Ogrzewanie jest (D2): <span class="switches">...</span></p>
+			</div>
+		</div>
+		<div id="pomieszczenie">
+			<a name="kuchnia"><h1>Kuchnia</h1></a>
+			<div class="IO_box">
+				<h2>Czujniki Kuchnia.</h2></a>
+				<p class="small_text">A0 used by Ethernet shield</p>
+				<p class="small_text">A1 used by Ethernet shield</p>
+				<p>Czujnik xxx (podłączony do A2): <span class="analog">...</span></p>
+				<p>Czujnik xxx (podłączony do A3): <span class="analog">...</span></p>
+				<p>Czujnik xxx (podłączony do A4): <span class="analog">...</span></p>
+				<p>Czujnik xxx (podłączony do A5): <span class="analog">...</span></p>
+			</div>
+			<div class="IO_box">
+				<h2>Czujniki stykowe</h2>
+				<p class="small_text">D0: used by serial RX</p>
+				<p class="small_text">D1: used by serial TX</p>
+				<p>Switch 1 (D2): <span class="switches">...</span></p>
+				<p>Switch 2 (D3): <span class="switches">...</span></p>
+				<p class="small_text">D4: used by Ethernet shield</p>
+				<p>Switch 3 (D5): <span class="switches">...</span></p>
+			</div>
+			<div class="IO_box">
+				<h2>Oświetlenie</h2>
+				<p>Punkty są: <button type="button" id="LED1" onclick="GetButton1()">OFF (D6)</button><br /><br /></p>
+				<p>Żylandor jest: <button type="button" id="LED2" onclick="GetButton2()">OFF (D7)</button><br /><br /></p>
+			</div>
+			<div class="IO_box">
+				<h2>Rolety</h2>
+				<p>Duże okno: <button type="button" id="LED3" onclick="GetButton3()">OFF (D8)</button><br /><br /></p>
+				<p>Małe okno: <button type="button" id="LED4" onclick="GetButton4()">OFF (D9)</button><br /><br /></p>
+			</div>
+			<div class="IO_box">
+				<h2>Ogrzewanie</h2>
+				<p>Czujnik temperatury (podłączony do A5): <span class="analog">...</span></p>
+				<button type="button" id="LED1" onclick="GetButton1()">+</button>
+				<button type="button" id="LED2" onclick="GetButton2()">-</button>
+				<p>Ogrzewanie jest (D2): <span class="switches">...</span></p>
+			</div>
+		</div>
+		<div id="pomieszczenie">
+			<a name="korytarz"><h1>Korytarz</h1></a>
+			<div class="IO_box">
+				<h2>Czujniki Korytarz.</h2></a>
+				<p class="small_text">A0 used by Ethernet shield</p>
+				<p class="small_text">A1 used by Ethernet shield</p>
+				<p>Czujnik xxx (podłączony do A2): <span class="analog">...</span></p>
+				<p>Czujnik xxx (podłączony do A3): <span class="analog">...</span></p>
+				<p>Czujnik xxx (podłączony do A4): <span class="analog">...</span></p>
+				<p>Czujnik xxx (podłączony do A5): <span class="analog">...</span></p>
+			</div>
+			<div class="IO_box">
+				<h2>Czujniki stykowe</h2>
+				<p class="small_text">D0: used by serial RX</p>
+				<p class="small_text">D1: used by serial TX</p>
+				<p>Switch 1 (D2): <span class="switches">...</span></p>
+				<p>Switch 2 (D3): <span class="switches">...</span></p>
+				<p class="small_text">D4: used by Ethernet shield</p>
+				<p>Switch 3 (D5): <span class="switches">...</span></p>
+			</div>
+			<div class="IO_box">
+				<h2>Oświetlenie</h2>
+				<p>Punkty są: <button type="button" id="LED1" onclick="GetButton1()">OFF (D6)</button><br /><br /></p>
+				<p>Żylandor jest: <button type="button" id="LED2" onclick="GetButton2()">OFF (D7)</button><br /><br /></p>
+			</div>
+			<div class="IO_box">
+				<h2>Rolety</h2>
+				<p>Duże okno: <button type="button" id="LED3" onclick="GetButton3()">OFF (D8)</button><br /><br /></p>
+				<p>Małe okno: <button type="button" id="LED4" onclick="GetButton4()">OFF (D9)</button><br /><br /></p>
+			</div>
+			<div class="IO_box">
+				<h2>Ogrzewanie</h2>
+				<p>Czujnik temperatury (podłączony do A5): <span class="analog">...</span></p>
+				<button type="button" id="LED1" onclick="GetButton1()">+</button>
+				<button type="button" id="LED2" onclick="GetButton2()">-</button>
+				<p>Ogrzewanie jest (D2): <span class="switches">...</span></p>
+			</div>
+		</div>
+		<div id="pomieszczenie">
+			<a name="ogrod"><h1>Ogród</h1></a>
+			<div class="IO_box">
+				<h2>Czujniki Ogród.</h2></a>
+				<p class="small_text">A0 used by Ethernet shield</p>
+				<p class="small_text">A1 used by Ethernet shield</p>
+				<p>Czujnik xxx (podłączony do A2): <span class="analog">...</span></p>
+				<p>Czujnik xxx (podłączony do A3): <span class="analog">...</span></p>
+				<p>Czujnik xxx (podłączony do A4): <span class="analog">...</span></p>
+				<p>Czujnik xxx (podłączony do A5): <span class="analog">...</span></p>
+			</div>
+			<div class="IO_box">
+				<h2>Czujniki stykowe</h2>
+				<p class="small_text">D0: used by serial RX</p>
+				<p class="small_text">D1: used by serial TX</p>
+				<p>Switch 1 (D2): <span class="switches">...</span></p>
+				<p>Switch 2 (D3): <span class="switches">...</span></p>
+				<p class="small_text">D4: used by Ethernet shield</p>
+				<p>Switch 3 (D5): <span class="switches">...</span></p>
+			</div>
+			<div class="IO_box">
+				<h2>Oświetlenie</h2>
+				<p>Punkty są: <button type="button" id="LED1" onclick="GetButton1()">OFF (D6)</button><br /><br /></p>
+				<p>Żylandor jest: <button type="button" id="LED2" onclick="GetButton2()">OFF (D7)</button><br /><br /></p>
+			</div>
+		</div>
+	 </div>
+	 <div id="footer">Twórca: Sebastian Owarzany. Strona w sieci od 2014r. &copy; Wszelkie prawa zastrzeżone</div>
+    </body>
+</html>
