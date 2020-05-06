@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Prawa Lampa</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+	<link rel="stylesheet" href="style.css">
+	<script src="html5kellycolorpicker.min.js"></script>
+</head>
+<body>
+  <div id="container">
+    <canvas id="picker"></canvas>
+    <div id="shower" class="">
+      <svg viewBox="0 0 10 10" id="arrow" width="80">
+        <path d="M 0.7,5 L 6,10 L 7,9.4 L 3,5 L 6,1 L 5,0 Z"/>
+      </svg>
+      <div id="showedBlock">
+        <div id="rangeBlock">
+          <input type="range" id="range" step="1" value="25" min="0" max="255">
+          <p id="rangeValue"></p>
+		  <input type="range" id="range1" step="1" value="25" min="10" max="200">
+          <p id="rangeValue1"></p>
+        </div>
+        <p id="currentEffect"></p>
+        <div id="submenu">
+          <span name="30">LED off</span>
+		  <span name="31">Lamp on</span>
+		  <span name="32">Lamp off</span>
+          <span name="1">Rainbow fade</span>
+          <span name="2">Rainbow loop</span>
+          <span name="3">Rainbow loop 2</span>
+          <span name="4">Random march</span>
+          <span name="5">Rgb propeller</span>
+          <span name="6">Rotating red blue</span>
+          <span name="7">Fire</span>
+          <span name="8">Blue fire</span>
+          <span name="9">Random bars</span>
+          <span name="10">Flicker</span>
+          <span name="11">Random color</span>
+          <span name="12">Sparkle</span>
+          <span name="13">Color bounce</span>
+          <span name="14">Color bounce fade</span>
+          <span name="15">Blue red bounce</span>
+          <span name="16">Rainbow vertical</span>
+          <span name="17">Matrix</span>
+          <span name="18">Rwb march</span>
+          <span name="19">Flame</span>
+          <span name="20">Theater chase</span>
+          <span name="21">Strobe</span>
+          <span name="22">Police blinker</span>
+          <span name="23">Kitt</span>
+          <span name="24">Rule</span>
+          <span name="25">Fade vertical</span>
+          <span name="26">Fade to center</span>
+          <span name="27">Runner chameleon</span>
+          <span name="28">Blende</span>
+		  <span name="29">Blende 2</span>
+        </div>
+      </div>
+    </div>
+  </div>
+	<script src="colorpicker.js"></script>
+	<script src="effects.js"></script>
+</body>
+</html>
