@@ -1,4 +1,4 @@
 # Auto detect text files and perform LF normalization
 * text=auto
-*.pascal linguist-detectable=false
-*.cpp linguist-detectable=true
+*.pas linguist-detectable=false
+*.ino linguist-detectable=true
