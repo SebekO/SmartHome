@@ -38,7 +38,7 @@ extern "C" {
 DoubleResetDetector drd(DRD_TIMEOUT, DRD_ADDRESS);
 
 int nr_button = 0;
-int nr_relay = 0;
+int nr_relay = 2;
 int invert = 0;
 int nr_ds18b20 = 0;
 int nr_dht = 0;
@@ -74,7 +74,7 @@ ESP8266HTTPUpdateServer httpUpdater;
 ETSTimer led_timer;
 
 // Setup a DHT instance
-//DHT dht(DHTPIN, DHTTYPE);
+// DHT dht(DHTPIN, DHTTYPE);
 DHT dht_sensor[MAX_DHT] = {
   { 0, 0 },
   { 0, 0 },
@@ -630,4 +630,3 @@ void add_Relay_Button_Invert(int relay, int button, int type) {
 
   SuplaDevice.addRelayButton(relay, button, type, read_supla_relay_flag(nr_relay), true);
 }
-
