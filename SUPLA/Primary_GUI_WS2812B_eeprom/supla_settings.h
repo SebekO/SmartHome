@@ -37,6 +37,7 @@
 #define  MAX_MLOGIN          32
 #define  MAX_MPASSWORD       64
 #define  MIN_PASSWORD        8
+
 #define  MAX_SUPLA_SERVER    SUPLA_SERVER_NAME_MAXSIZE
 #define  MAX_SUPLA_ID        32
 #define  MAX_SUPLA_PASS      SUPLA_LOCATION_PWD_MAXSIZE
